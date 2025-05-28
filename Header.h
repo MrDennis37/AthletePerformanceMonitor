@@ -6,7 +6,6 @@
 #include <stdlib.h>
 
 #define FILE_NAME "athletes.bin"
-#define MAX_TRAININGS 12
 
 typedef struct Athlete {
     char name[20];
@@ -15,12 +14,20 @@ typedef struct Athlete {
     int height;
     float weight;
     int id;
+	CATEGORY category;
 } ATHLETE;
 
 typedef enum {
-    sortUpwards = 1,
-    sortDownwards,
+    KIDS,
+    CADETS,
+    JUNIORS,
+    SENIORS
+} CATEGORY;
+
+
+typedef enum {
     sortAlphabetically,
+    sortReverseAlphabetically,
     categoryUpwards,
     categoryDownwards,
     ageUpwards,
@@ -34,5 +41,6 @@ void allAthleteOverview(FILE* file);
 void deleteAthlete(FILE* file);
 void searchAthlete(FILE* file);
 void updateAthlete(FILE* file);
+void sortAthletes(FILE* file);
 
 #endif

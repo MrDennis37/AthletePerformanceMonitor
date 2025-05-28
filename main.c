@@ -33,12 +33,12 @@ int main() {
 		printf("|           Tracker             |\n");
 		printf("*********************************\n");
 		printf("|       Choose an option:       |\n");
-		printf("|        1. Training log        |\n");
-		printf("|   2. All Athletes Overview    |\n");
-		printf("|        3. Add Athlete         |\n");
-		printf("|    4. Update Athlete Info     |\n");
-		printf("|    5. Delete Athlete Info     |\n");
-		printf("|      6. Search athlete        |\n");
+		printf("|   1. All Athletes Overview    |\n");
+		printf("|        2. Add Athlete         |\n");
+		printf("|    3. Update Athlete Info     |\n");
+		printf("|    4. Delete Athlete Info     |\n");
+		printf("|      5. Search athlete        |\n");
+		printf("|        6. Sort Athletes       |\n");
 		printf("|           7. Exit             |\n");
 		printf("*********************************\n");
 		printf("|    Enter your choice (1-7):   |\n");
@@ -53,26 +53,26 @@ int main() {
 
 		switch (choice) {
 		case 1:
-			printf("Training log\n");
-			break;
-		case 2:
 			allAthleteOverview(file);
 			break;
-		case 3:
+		case 2:
 			addAthlete(file);
 			break;
-		case 4:
+		case 3:
 			updateAthlete(file);
 			break;
-		case 5:
+		case 4:
 			deleteAthlete(file);
 			break;
-		case 6:
+		case 5:
 			searchAthlete(file);
+			break;
+		case 6:
+			sortAthletes(file);
 			break;
 		case 7:
 			fclose(file);
-			break;
+			exit(0);
 		default:
 			printf("Invalid choice. Please try again.\n");
 			break;
