@@ -54,13 +54,13 @@ void addAthlete(FILE* file) {
         return;
     }
 
-    if (newAthlete.age < 12) {
+    if (newAthlete.age < 13) {
         newAthlete.category = KIDS;
     }
-    else if (newAthlete.age <= 15) {
+    else if (newAthlete.age <= 17) {
         newAthlete.category = CADETS;
     }
-    else if (newAthlete.age <= 18) {
+    else if (newAthlete.age <= 20) {
         newAthlete.category = JUNIORS;
     }
     else {
@@ -99,6 +99,7 @@ void allAthleteOverview(FILE* file) {
         printf("Age: %d\n", athlete.age);
         printf("Height: %d cm\n", athlete.height);
         printf("Weight: %.1f kg\n", athlete.weight);
+        printf("%s", categoryToString(athlete.category));
         printf("********************************\n");
     }
 
@@ -112,15 +113,16 @@ void allAthleteOverview(FILE* file) {
 void deleteAthlete(FILE* file) {
     int idToDelete;
 
-    printf("Enter athletes ID to delete: ");
+    printf("Enter athlete's ID to delete: ");
     if (scanf("%d", &idToDelete) != 1) {
         printf("Wrong ID.\n");
+        while (getchar() != '\n'); 
         return;
     }
 
     FILE* tempFile = fopen("temp.bin", "wb");
     if (!tempFile) {
-        perror("Greška pri otvaranju temp.bin");
+        perror("Error opening temp.bin");
         return;
     }
 
@@ -142,22 +144,29 @@ void deleteAthlete(FILE* file) {
     fclose(tempFile);
 
     if (remove("athletes.bin") != 0) {
-        perror("Erorr deleting athletes file");
+        perror("Error deleting athletes file");
         return;
     }
 
     if (rename("temp.bin", "athletes.bin") != 0) {
-        perror("Error with renaming file");
+        perror("Error renaming file");
         return;
     }
+	file = fopen(FILE_NAME, "rb+");
+	if (file == NULL) {
+		printf("Error reopening athletes file.\n");
+		return;
+	}
 
     if (found) {
         printf("Athlete deleted.\n");
     }
     else {
-        printf("Athlete with id %d not found\n", idToDelete);
+        printf("Athlete with ID %d not found.\n", idToDelete);
     }
+
 }
+
 
 void searchAthlete(FILE* file) {
     ATHLETE athlete = { 0 };
@@ -261,13 +270,12 @@ void searchAthlete(FILE* file) {
     }
 }
 
-
 void updateAthlete(FILE* file) {
     int id, found = 0;
     ATHLETE athlete;
 
     FILE* f = fopen(FILE_NAME, "rb+");
-    if (f== NULL) {
+    if (f == NULL) {
         printf("Error opening file!\n");
         return;
     }
@@ -279,32 +287,32 @@ void updateAthlete(FILE* file) {
         return;
     }
 
-    while (fread(&athlete, sizeof(ATHLETE), 1, file) == 1) {
+    while (fread(&athlete, sizeof(ATHLETE), 1, f) == 1) {
         if (athlete.id == id) {
             found = 1;
 
             printf("Athlete found:\n");
-            printf("ID: %d\nName: %s\nSurname: %s\nAge: %d\nHeight: %d\n",
-                athlete.id, athlete.name, athlete.surname, athlete.age, athlete.height);
+            printf("ID: %d\nName: %s\nSurname: %s\nAge: %d\nHeight: %d\nWeight: %.1f\n",
+                athlete.id, athlete.name, athlete.surname, athlete.age, athlete.height, athlete.weight);
 
             int choice;
             printf("\nWhat do you want to update?\n");
-            printf("1. Name\n2. Surname\n3. Age\n4. Height\n5. All fields\nChoice: ");
+            printf("1. Name\n2. Surname\n3. Age\n4. Height\n5. Weight\n6. All fields\nChoice: ");
             if (scanf("%d", &choice) != 1) {
                 printf("Invalid input for choice.\n");
-                fclose(file);
+                fclose(f);
                 return;
             }
 
             int ch;
-            while ((ch = getchar()) != '\n' && ch != EOF);  
+            while ((ch = getchar()) != '\n' && ch != EOF);
 
             switch (choice) {
             case 1:
                 printf("Enter new name: ");
                 if (scanf("%19s", athlete.name) != 1) {
                     printf("Invalid input for name.\n");
-                    fclose(file);
+                    while (getchar() != '\n');
                     return;
                 }
                 break;
@@ -312,7 +320,7 @@ void updateAthlete(FILE* file) {
                 printf("Enter new surname: ");
                 if (scanf("%19s", athlete.surname) != 1) {
                     printf("Invalid input for surname.\n");
-                    fclose(file);
+                    while (getchar() != '\n');
                     return;
                 }
                 break;
@@ -320,7 +328,7 @@ void updateAthlete(FILE* file) {
                 printf("Enter new age: ");
                 if (scanf("%d", &athlete.age) != 1) {
                     printf("Invalid input for age.\n");
-                    fclose(file);
+                    while (getchar() != '\n');
                     return;
                 }
                 break;
@@ -328,44 +336,72 @@ void updateAthlete(FILE* file) {
                 printf("Enter new height: ");
                 if (scanf("%d", &athlete.height) != 1) {
                     printf("Invalid input for height.\n");
-                    fclose(file);
+                    while (getchar() != '\n');
                     return;
                 }
                 break;
             case 5:
+                printf("Enter new weight: ");
+                if (scanf("%f", &athlete.weight) != 1) {
+                    printf("Invalid input for weight.\n");
+                    while (getchar() != '\n');
+                    return;
+                }
+                break;
+            case 6:
                 printf("Enter new name: ");
                 if (scanf("%19s", athlete.name) != 1) {
                     printf("Invalid input for name.\n");
-                    fclose(file);
+                    while (getchar() != '\n');
                     return;
                 }
                 printf("Enter new surname: ");
                 if (scanf("%19s", athlete.surname) != 1) {
                     printf("Invalid input for surname.\n");
-                    fclose(file);
+                    while (getchar() != '\n');
                     return;
                 }
                 printf("Enter new age: ");
                 if (scanf("%d", &athlete.age) != 1) {
                     printf("Invalid input for age.\n");
-                    fclose(file);
+                    while (getchar() != '\n');
                     return;
                 }
                 printf("Enter new height: ");
                 if (scanf("%d", &athlete.height) != 1) {
                     printf("Invalid input for height.\n");
-                    fclose(file);
+                    while (getchar() != '\n');
+                    return;
+                }
+                printf("Enter new weight: ");
+                if (scanf("%f", &athlete.weight) != 1) {
+                    printf("Invalid input for weight.\n");
+                    while (getchar() != '\n');
                     return;
                 }
                 break;
             default:
                 printf("Invalid choice.\n");
-                fclose(file);
+                fclose(f);
                 return;
             }
 
-            fseek(file, -((long)sizeof(ATHLETE)), SEEK_CUR);
-            fwrite(&athlete, sizeof(ATHLETE), 1, file);
+            
+            if (athlete.age < 12) {
+                athlete.category = KIDS;
+            }
+            else if (athlete.age <= 15) {
+                athlete.category = CADETS;
+            }
+            else if (athlete.age <= 18) {
+                athlete.category = JUNIORS;
+            }
+            else {
+                athlete.category = SENIORS;
+            }
+
+            fseek(f, -(long)sizeof(ATHLETE), SEEK_CUR);
+            fwrite(&athlete, sizeof(ATHLETE), 1, f);
             printf("Athlete updated successfully.\n");
             break;
         }
@@ -375,68 +411,92 @@ void updateAthlete(FILE* file) {
         printf("Athlete with ID %d not found.\n", id);
     }
 
-    fclose(file);
+    fclose(f);
+}
+
+static inline void printAthlete(const ATHLETE* athlete) {
+    printf("Name: %s, Surname: %s, Age: %d, Category: %s\n",
+        athlete->name, athlete->surname, athlete->age, categoryToString(athlete->category));
+}
+
+
+int compareByFirstName(const void* a, const void* b) {
+    return strcmp(((ATHLETE*)a)->name, ((ATHLETE*)b)->name);
+}
+
+int compareByLastName(const void* a, const void* b) {
+    return strcmp(((ATHLETE*)a)->surname, ((ATHLETE*)b)->surname);
+}
+
+int compareByAge(const void* a, const void* b) {
+    return ((ATHLETE*)a)->age - ((ATHLETE*)b)->age;
+}
+
+int compareByCategory(const void* a, const void* b) {
+    return ((ATHLETE*)a)->category - ((ATHLETE*)b)->category;
+}
+
+
+
+const char* categoryToString(CATEGORY category) {
+    switch (category) {
+    case KIDS: return "KIDS";
+    case CADETS: return "CADETS";
+    case JUNIORS: return "JUNIORS";
+    case SENIORS: return "SENIORS";
+    default: return "UNKNOWN";
+    }
 }
 
 
 void sortAthletes(FILE* file) {
-    FILE* f = fopen(FILE_NAME, "rb");
-    if (f == NULL) {
-        printf("Error opening file!\n");
-        return;
+    rewind(file);
+    ATHLETE* athletes = NULL;
+    int count = 0;
+    ATHLETE temp;
+
+    while (fread(&temp, sizeof(ATHLETE), 1, file) == 1) {
+        ATHLETE* tempPtr = realloc(athletes, (count + 1) * sizeof(ATHLETE));
+        if (!tempPtr) {
+            printf("Memory allocation failed.\n");
+            free(athletes);
+            return;
+        }
+        athletes = tempPtr;
+        athletes[count++] = temp;
     }
 
-    fseek(f, 0, SEEK_END);
-    long size = ftell(f);
-    int count = size / sizeof(ATHLETE);
-    rewind(f);
-
-    ATHLETE* athletes = (ATHLETE*)malloc(size);
-    if (athletes == NULL) {
-        printf("Memory allocation failed!\n");
-        fclose(f);
+    if (count == 0) {
+        printf("No athletes found.\n");
         return;
     }
-
-    fread(athletes, sizeof(ATHLETE), count, f);
-    fclose(f);
 
     int choice;
-    printf("\n*************************************************\n");
-    printf("Choose how to sort athletes:\n");
-    printf("1. Sort by name (A-Z)\n");
-    printf("2. Sort by name (Z-A)\n");
-    printf("3. Sort by age (youngest to oldest)\n");
-    printf("4. Sort by age (oldest to youngest)\n");
-    printf("5. Sort by category (Kids → Senior)\n");
-    printf("6. Sort by category (Senior → Kids)\n");
-    printf("*************************************************\n");
-    printf("Choice: ");
-
+    printf("\nSort athletes by:\n");
+    printf("1. First Name\n");
+    printf("2. Last Name\n");
+    printf("3. Age\n");
+    printf("4. Category\n");
+    printf("Enter your choice: ");
     if (scanf("%d", &choice) != 1) {
         printf("Invalid input.\n");
+        while (getchar() != '\n');
         free(athletes);
         return;
     }
 
     switch (choice) {
     case 1:
-        qsort(athletes, count, sizeof(ATHLETE), compareByNameAZ);
+        qsort(athletes, count, sizeof(ATHLETE), compareByFirstName);
         break;
     case 2:
-        qsort(athletes, count, sizeof(ATHLETE), compareByNameZA);
+        qsort(athletes, count, sizeof(ATHLETE), compareByLastName);
         break;
     case 3:
-        qsort(athletes, count, sizeof(ATHLETE), compareByAgeAsc);
+        qsort(athletes, count, sizeof(ATHLETE), compareByAge);
         break;
     case 4:
-        qsort(athletes, count, sizeof(ATHLETE), compareByAgeDesc);
-        break;
-    case 5:
-        qsort(athletes, count, sizeof(ATHLETE), compareByCategoryAsc);
-        break;
-    case 6:
-        qsort(athletes, count, sizeof(ATHLETE), compareByCategoryDesc);
+        qsort(athletes, count, sizeof(ATHLETE), compareByCategory);
         break;
     default:
         printf("Invalid choice.\n");
@@ -444,7 +504,20 @@ void sortAthletes(FILE* file) {
         return;
     }
 
-    
+    printf("\nSorted Athletes:\n");
+    for (int i = 0; i < count; i++) {
+        printf("-----------------------------------\n");
+        printf("ID: %d\n", athletes[i].id);
+        printf("Name: %s\n", athletes[i].name);
+        printf("Surname: %s\n", athletes[i].surname);
+        printf("Age: %d\n", athletes[i].age);
+        printf("Height: %d\n", athletes[i].height);
+        printf("Weight: %.2f\n", athletes[i].weight);
+        printf("Category: %s\n", categoryToString(athletes[i].category));
+    }
+
+    free(athletes);
 }
+
 
 

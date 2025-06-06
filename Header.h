@@ -1,21 +1,11 @@
-#define _CRT_SECURE_NO_WARNINGS
 #ifndef HEADER_H
 #define HEADER_H
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define FILE_NAME "athletes.bin"
-
-typedef struct Athlete {
-    char name[20];
-    char surname[20];
-    int age;
-    int height;
-    float weight;
-    int id;
-	CATEGORY category;
-} ATHLETE;
 
 typedef enum {
     KIDS,
@@ -24,17 +14,15 @@ typedef enum {
     SENIORS
 } CATEGORY;
 
-
-typedef enum {
-    sortAlphabetically,
-    sortReverseAlphabetically,
-    categoryUpwards,
-    categoryDownwards,
-    ageUpwards,
-    ageDownwards,
-    povratak
-} SortOption;
-
+typedef struct Athlete {
+    char name[20];
+    char surname[20];
+    int age;
+    int height;
+    float weight;
+    int id;
+    CATEGORY category;
+} ATHLETE;
 
 void addAthlete(FILE* file);
 void allAthleteOverview(FILE* file);
@@ -43,4 +31,12 @@ void searchAthlete(FILE* file);
 void updateAthlete(FILE* file);
 void sortAthletes(FILE* file);
 
-#endif
+int compareByFirstName(const void* a, const void* b);
+int compareByLastName(const void* a, const void* b);
+int compareByAge(const void* a, const void* b);
+int compareByCategory(const void* a, const void* b);
+const char* categoryToString(CATEGORY category);
+extern FILE* file;
+
+
+#endif 
