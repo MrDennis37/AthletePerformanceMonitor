@@ -25,16 +25,26 @@ typedef struct Athlete {
 } ATHLETE;
 
 void addAthlete(FILE* file);
+void printAthletes(FILE* f, int count);
 void allAthleteOverview(FILE* file);
 void deleteAthlete(FILE* file);
 void searchAthlete(FILE* file);
 void updateAthlete(FILE* file);
 void sortAthletes(FILE* file);
 
-int compareByFirstName(const void* a, const void* b);
-int compareByLastName(const void* a, const void* b);
-int compareByAge(const void* a, const void* b);
+int compareByFirstNameAsc(const void* a, const void* b);
+int compareByFirstNameDesc(const void* a, const void* b);
+
+int compareByLastNameAsc(const void* a, const void* b);
+int compareByLastNameDesc(const void* a, const void* b);
+
+int compareByAgeAsc(const void* a, const void* b);
+int compareByAgeDesc(const void* a, const void* b);
+
 int compareByCategory(const void* a, const void* b);
+int compareByCategoryAsc(const void* a, const void* b);
+int compareByCategoryDesc(const void* a, const void* b);
+
 const char* categoryToString(CATEGORY category);
 extern FILE* file;
 
