@@ -31,7 +31,7 @@ void deleteAthlete(FILE* file);
 void searchAthlete(FILE* file);
 void updateAthlete(FILE* file);
 void sortAthletes(FILE* file);
-
+int remove_file();
 int compareByFirstNameAsc(const void* a, const void* b);
 int compareByFirstNameDesc(const void* a, const void* b);
 

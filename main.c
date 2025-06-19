@@ -36,7 +36,8 @@ int main() {
         printf("|    4. Delete Athlete Info     |\n");
         printf("|      5. Search athlete        |\n");
         printf("|        6. Sort Athletes       |\n");
-        printf("|           7. Exit             |\n");
+        printf("|         7. Delete             |\n");
+        printf("|          8. Exit             |\n");
         printf("*********************************\n");
         printf("|    Enter your choice (1-7):   |\n");
         printf("*********************************\n");
@@ -67,6 +68,10 @@ int main() {
             sortAthletes(file);
             break;
         case 7:
+            fclose(file);
+            remove_file();
+            break;
+        case 8:
             fclose(file);
             exit(0);
         default:
